@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>JS + CSS Clock</title>
+</head>
+<body>
+
+
+    <div class="clock">
+      <div class="clock-face">
+        <div class="hand hour-hand"></div>
+        <div class="hand min-hand"></div>
+        <div class="hand second-hand"></div>
+      </div>
+    </div>
+
+
+  <style>
+    html {
+      background: #018DED url(https://unsplash.it/1500/1000?image=881&blur=5);
+      background-size: cover;
+      font-family: 'helvetica neue';
+      text-align: center;
+      font-size: 10px;
+    }
+
+    body {
+      margin: 0;
+      font-size: 2rem;
+      display: flex;
+      flex: 1;
+      min-height: 100vh;
+      align-items: center;
+    }
+
+    .clock {
+      width: 30rem;
+      height: 30rem;
+      border: 20px solid white;
+      border-radius: 50%;
+      margin: 50px auto;
+      position: relative;
+      padding: 2rem;
+      box-shadow:
+        0 0 0 4px rgba(0,0,0,0.1),
+        inset 0 0 0 3px #EFEFEF,
+        inset 0 0 10px black,
+        0 0 10px rgba(0,0,0,0.2);
+    }
+
+    .clock-face {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      transform: translateY(-3px); /* account for the height of the clock hands */
+    }
+
+    .hand {
+      width: 50%;
+      height: 6px;
+      background: black;
+      position: absolute;
+      top: 50%;
+      transform-origin: 100% 50%;
+    }
+  </style>
+
+  <script>
+    // (1) 取得頁面上各指針的元素
+    const hourHand = document.querySelector('.hour-hand');
+    const minHand = document.querySelector('.min-hand');
+    const secHand = document.querySelector('.second-hand');
+    
+    // (2) 建立函式
+    function setClock(){
+      // 取得目前時間
+      let time = new Date(); // 透過 new Date() 這個方法，來取得目前的時間物件
+
+      // 計算指針角度
+      // 利用 getter 來各別取得目前的時、分、秒
+      // 每 1 小時，時針移動一格，因此每 1 小時時針轉動 360 / 12 格 = 30 度
+      // 每 1 分鐘，分針移動一格，因此每 1 分鐘分針轉動 360 / 60 格 =  6 度
+      // 每 1 秒鐘，秒針移動一格，因此每 1 秒鐘秒針轉動 360 / 60 格 =  6 度
+      let hourDeg = time.getHours() * 30 + time.getMinutes() * 30 / 60 + 90;
+      let minDeg = time.getMinutes() * 6 + time.getSeconds() * 6 / 60 + 90;
+      let secondDeg = time.getSeconds() * 6 + 90;
+      
+      // 設定指針旋轉
+      hourHand.style.transform = `rotate(${hourDeg}deg) scaleX(0.6)`;
+      minHand.style.transform = `rotate(${minDeg}deg) scaleX(0.8)`;
+      secHand.style.transform = `rotate(${secondDeg}deg)`;
+    }
+
+    // (3) 初始化畫面
+    setClock(); // 開啟頁面時，先執行一次
+
+    // (4) setInterval()方法：每經過一定時間，執行一次函式
+    setInterval(setClock, 1000); // setInterval(函式,時間/*毫秒*/)
+  </script>
+</body>
+</html>

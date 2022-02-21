@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Type Ahead 👀</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <form class="search-form">
+    <input type="text" class="search" placeholder="City or State">
+    <ul class="suggestions">
+      <li>Filter for a city</li>
+      <li>or a state</li>
+    </ul>
+  </form>
+<script>
+
+  // (1) 取得資料
+  const endpoint = 'https://gist.githubusercontent.com/Miserlou/c5cd8364bf9b2420bb29/raw/2bf258763cdddd704f8ffd3ea9a3e81d25e2c6f6/cities.json';
+
+  let locationData = [];
+  console.log(locationData);
+
+  fetch(endpoint)
+    .then(blob => blob.json())
+    .then(data => locationData.push(...data));
+
+  // (2) input元素監聽事件
+  document.querySelector('input').addEventListener('input', displayMatches);
+  
+  // 選取ul元素
+  const suggestions = document.querySelector('.suggestions');
+
+  // 觸發的函式
+  function displayMatches(event) {
+    // 1. 判斷符合的物件 => 正規表達式
+    // 2. 將符合的資料呈現在頁面上
+    // 3. 將符合的字體加上顏色
+
+    // var re = /ab+c/gi;
+    // var re = new RegExp('ab+c','gi');
+
+    // 取得<input>元素觸發事件時的值
+    let checkWord = event.target.value;
+    // 篩選符合的物件 
+    const matchArray = cities.filter(function(place){
+      // 設定正規表達式的篩選條件為全文以及不分大小寫
+      const regex = new RegExp(checkWord, 'gi');
+      return place.city.match(regex) || place.state.match(regex);
+    });
+    // 將需要的資料轉成html格式
+    const html = matchArray.map(function(place){
+      const regex = new RegExp(checkWord, 'gi');
+      // 將匹配的字元獨立一個<span>元素並加上class
+      const cityName = place.city.replace(regex, `<span class="h1">${checkWord}</span>`)
+      const stateName = place.state.replace(regex, `<span class="h1">${checkWord}</span>`)
+      // 設定回傳元素的資料格式
+      return `
+        <li>
+          <span class="name">${cityName},${stateName}</span>
+          <span class="population">${place.population}</span>
+        </li>
+      `;
+    // 將陣列轉為字串
+    }).join('');
+    // 將`ul`容器中的HTML內容改為符合的資料內容
+    suggestions.innerHTML = html;
+  }
+
+  // // match()
+  // var test_a = new RegExp('a','gi');
+  // let a = 'abcAbca';
+  // console.log(a.match(test_a)); // ['a', 'A', 'a']
+
+  // // search()
+  // var test_b = new RegExp('ba','ig');
+  // let b = 'abcAbaca';
+  // console.log(b.search(test_b));
+
+  // // replace()
+  // var test_c = new RegExp('ab', 'ig');
+  // let c = 'ababab';
+  // console.log(c.replace(test_c, 'cd'));
+
+  // // split()
+  // var text_d = new RegExp('bc', 'ig');
+  // let d = 'abcdabcdabcd';
+  // console.log(d.split(text_d));
+
+</script>
+</body>
+</html>

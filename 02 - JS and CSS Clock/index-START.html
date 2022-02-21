@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>JS + CSS Clock</title>
+</head>
+<body>
+
+
+    <div class="clock">
+      <div class="clock-face">
+        <div class="hand hour-hand"></div>
+        <div class="hand min-hand"></div>
+        <div class="hand second-hand"></div>
+      </div>
+    </div>
+
+
+  <style>
+    html {
+      background: #018DED url(https://unsplash.it/1500/1000?image=881&blur=5);
+      background-size: cover;
+      font-family: 'helvetica neue';
+      text-align: center;
+      font-size: 10px;
+    }
+
+    body {
+      margin: 0;
+      font-size: 2rem;
+      display: flex;
+      flex: 1;
+      min-height: 100vh;
+      align-items: center;
+    }
+
+    .clock {
+      width: 30rem;
+      height: 30rem;
+      border: 20px solid white;
+      border-radius: 50%;
+      margin: 50px auto;
+      position: relative;
+      padding: 2rem;
+      box-shadow:
+        0 0 0 4px rgba(0,0,0,0.1),
+        inset 0 0 0 3px #EFEFEF,
+        inset 0 0 10px black,
+        0 0 10px rgba(0,0,0,0.2);
+    }
+
+    .clock-face {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      transform: translateY(-3px); /* account for the height of the clock hands */
+    }
+
+    .hand {
+      width: 50%;
+      height: 6px;
+      background: black;
+      position: absolute;
+      top: 50%;
+      transform-origin: 100% 50%;
+    }
+
+  </style>
+
+  <script>
+    // (1) 取得時間
+    var time = new Date();
+    var currentHour = time.getHours();
+    var currentMinute = time.getMinutes();
+    var currentSecond = time.getSeconds();
+    console.log(time);
+    console.log('Current Hour: ', currentHour);
+    console.log('Current Minute: ', currentMinute);
+    console.log('Current Second: ', currentSecond);
+
+    // (2) 指針角度
+    // 每 1 小時，時針移動一格，因此每 1 小時時針轉動 360 / 12 格 = 30 度
+    // 每 1 分鐘，分針移動一格，因此每 1 分鐘分針轉動 360 / 60 格 =  6 度
+    // 每 1 秒鐘，秒針移動一格，因此每 1 秒鐘秒針轉動 360 / 60 格 =  6 度
+    var hourAngle = currentHour * 360/12 + currentMinute * 360/(12*60) + 90;
+    var minAngle = currentMinute * 360/60 + currentSecond * 360/(60*60) + 90;
+    var secondAngle = currentSecond * 360/60 + 90;
+
+    // 取得頁面上各指針的元素
+    var hourHand = document.querySelector('.hour-hand');
+    var minHand = document.querySelector('.min-hand');
+    var secHand = document.querySelector('.second-hand');
+    
+    // (3) 建立函式
+    function getAngle(){
+      // 各指針每秒所旋轉的角度
+      hourAngle = hourAngle + 360 / (12*60*60);
+      minAngle = minAngle + 360 / (60*60);
+      secondAngle = secondAngle + 360 / 60;
+
+      hourHand.style.transform = `rotate(${hourAngle}deg) scaleX(0.7)`;
+      minHand.style.transform = `rotate(${minAngle}deg) scaleX(0.9)`;
+      secHand.style.transform = `rotate(${secondAngle}deg)`;
+    }
+    
+    getAngle(); // 開啟頁面時，先執行一次
+
+    // (4) setInterval()方法：每經過一定時間，執行一次函式
+    setInterval(getAngle, 1000); // setInterval(函式,時間/*毫秒*/)
+    
+  </script>
+</body>
+</html>

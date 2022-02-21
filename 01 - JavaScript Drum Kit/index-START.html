@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>JS Drum Kit</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+
+  <div class="keys">
+    <div data-key="65" class="key">
+      <kbd>A</kbd>
+      <span class="sound">clap</span>
+    </div>
+    <div data-key="83" class="key">
+      <kbd>S</kbd>
+      <span class="sound">hihat</span>
+    </div>
+    <div data-key="68" class="key">
+      <kbd>D</kbd>
+      <span class="sound">kick</span>
+    </div>
+    <div data-key="70" class="key">
+      <kbd>F</kbd>
+      <span class="sound">openhat</span>
+    </div>
+    <div data-key="71" class="key">
+      <kbd>G</kbd>
+      <span class="sound">boom</span>
+    </div>
+    <div data-key="72" class="key">
+      <kbd>H</kbd>
+      <span class="sound">ride</span>
+    </div>
+    <div data-key="74" class="key">
+      <kbd>J</kbd>
+      <span class="sound">snare</span>
+    </div>
+    <div data-key="75" class="key">
+      <kbd>K</kbd>
+      <span class="sound">tom</span>
+    </div>
+    <div data-key="76" class="key">
+      <kbd>L</kbd>
+      <span class="sound">tink</span>
+    </div>
+  </div>
+
+  <audio data-key="65" src="sounds/clap.wav"></audio>
+  <audio data-key="83" src="sounds/hihat.wav"></audio>
+  <audio data-key="68" src="sounds/kick.wav"></audio>
+  <audio data-key="70" src="sounds/openhat.wav"></audio>
+  <audio data-key="71" src="sounds/boom.wav"></audio>
+  <audio data-key="72" src="sounds/ride.wav"></audio>
+  <audio data-key="74" src="sounds/snare.wav"></audio>
+  <audio data-key="75" src="sounds/tom.wav"></audio>
+  <audio data-key="76" src="sounds/tink.wav"></audio>
+
+<script>
+  // (1) 監聽事件
+  // 利用在 window 上 addEventListener 去監聽使用者按下或放開按鍵
+  window.addEventListener('keydown', play); // 按下按鍵時，頁面會執行 play 這個函式
+  window.addEventListener('keyup', stop); // 放開按鍵時，頁面則執行 stop 這個函式
+
+  // (2) 綁定按鍵
+  // 透過event.keyCode這個屬性，可以取得按下按鍵這個事件時，所按下按鍵的編碼
+  // keycode: https://keycode.info/
+
+  // function play(e){ // e -> event 特殊參數，我們可以使用這個參數得知很多資訊，像是：
+  //   e.key; = event.key; -> 偵測使用者按下按鍵的字母
+  //   e.keyCode; = event.keyCode; -> 偵測使用者按下按鍵的鍵碼
+  // }
+
+  // (3) 撰寫函式
+  function play(e){
+    console.log(e);
+    // 給定一變數來取得按下按鍵的keyCode
+    let keyboard = e.keyCode;
+
+    // 判斷式：當取得的keyCode為符合的9個按鍵才會往下執行
+    if(keyboard === 65 || keyboard === 83 || keyboard === 68 || keyboard ===70 || keyboard ===71 || keyboard ===72 || keyboard ===74 || keyboard ===75 || keyboard ===76){
+      
+      //取得按下的div元素將其改為playing這個class
+      const key = document.querySelector(`div[data-key="${e.keyCode}"]`);
+      key.classList.add('playing'); // 邊框特效
+      
+      //取得對應的audio元素並播放
+      const audio = document.querySelector(`audio[data-key="${e.keyCode}"]`);
+      audio.play();
+    }
+  }
+
+  function stop(e){
+    // 給定一變數來取得放開按鍵的keyCode
+    let keyboard = e.keyCode;
+
+    // 判斷式：當取得的keyCode為符合的9個按鍵才會往下執行
+    if(keyboard === 65 || keyboard === 83 || keyboard === 68 || keyboard ===70 || keyboard ===71 || keyboard ===72 || keyboard ===74 || keyboard ===75 || keyboard ===76){
+      
+      //取得離開的div元素將其改回key這個class
+      const key = document.querySelector(`div[data-key="${e.keyCode}"]`);
+      key.classList.remove('playing');
+      
+      //取得對應的audio元素並重新加載
+      const audio = document.querySelector(`audio[data-key="${e.keyCode}"]`);
+      audio.load();
+    }
+  }
+</script>
+
+
+</body>
+</html>
